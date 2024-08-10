@@ -104,7 +104,7 @@ Load the trained model:
 ```python
 loaded_model = load('stock_price_prediction.joblib')
 ```
-### Predict stock prices:
+Predict stock prices:
 ```python
 y_pred = loaded_model.predict(X_test)
 ```
