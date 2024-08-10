@@ -5,7 +5,7 @@ This project focuses on predicting stock prices using various machine learning m
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Dataset](#dataset)
-- [Setup](#setup-and-requirements)
+- [Setup](#setup)
 - [Custom Train Test Split](#custom-train-test-split)
 - [Modeling with LazyPredict](#modeling-with-lazypredict)
 - [Top Model Selection](#top-model-selection)
