@@ -36,12 +36,8 @@ The dataset used in this project consists of stock prices with the following col
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/stock-price-prediction.git
-    cd stock-price-prediction
-    ```
-2. Install the required packages:
-    ```bash
-    pip install -r requirements.txt
+    git clone https://github.com/OtaTran241/Stock_Price_Prediction.git
+    cd Stock_Price_Prediction
     ```
 
 ## Modeling with LazyPredict
