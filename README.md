@@ -33,6 +33,6 @@ The dataset used in this project consists of stock prices with the following col
 - **Open Interest**: Number of outstanding contracts.
 
 ### Dataset Example:
-Ticker Date/Time  Open High  Low   Close Volume Open Interest
-MSN    12/25/2017 9:15 73.10 73.10 73.10 73.10  4210 0
+Ticker Date/Time  Open High  Low   Close Volume Open Interest  
+MSN    12/25/2017 9:15 73.10 73.10 73.10 73.10  4210 0  
 MSN    12/25/2017 9:16 73.00 73.00 73.00 73.00  5000 0
