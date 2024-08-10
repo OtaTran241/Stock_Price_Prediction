@@ -91,3 +91,30 @@ test_mse = mean_squared_error(y_test, y_pred)
 test_rmse = np.sqrt(test_mse)
 test_r2 = r2_score(y_test, y_pred)
 ```
+## Results
+The best model selected was OrthogonalMatchingPursuitCV with a Standard Scaler. The model achieved nearly perfect accuracy with an RMSE close to zero.
+
+The LSTM model also performed well, achieving high accuracy in predicting stock prices.
+
+## Usage
+### Predicting Stock Prices
+After training, you can use the saved models to predict future stock prices:
+
+Load the trained model:
+```python
+loaded_model = load('stock_price_prediction.joblib')
+Predict stock prices:
+```
+```python
+y_pred = loaded_model.predict(X_test)
+```
+### Visualization
+Visualize the actual vs predicted stock prices:
+
+```python
+plt.plot(results['Date'], results['Actual'], label='Actual Price', color='blue', linewidth=2)
+plt.plot(results['Date'], results['Predicted'], label='Predicted Price', color='red', linewidth=2)
+plt.show()
+```
+## Contributing
+Contributions are welcome! If you have any ideas for improving the model or adding new features, feel free to submit a pull request or send an email to [tranducthuan220401@gmail.com](mailto:tranducthuan220401@gmail.com).
