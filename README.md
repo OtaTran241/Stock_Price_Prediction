@@ -95,6 +95,30 @@ models, predictions = lazy_reg.fit(X_train_lazy, X_test_lazy, y_train_lazy, y_te
 ## Top Model Selection
 After identifying the best-performing models using `LazyPredict`, we further fine-tuned these models by applying hyperparameter optimization using `GridSearchCV`. This process involved evaluating multiple combinations of regressors and data scaling methods to determine the best model for predicting stock prices.
 
+### Example Code:
+```python
+regressors = {
+    'BayesianRidge': (BayesianRidge(), {'regressor__n_iter': [300, 500, 1000]}),
+    'TransformedTargetRegressor': (TransformedTargetRegressor(regressor=LinearRegression()), {}),
+    'LinearRegression': (LinearRegression(), {}),
+    'OrthogonalMatchingPursuitCV': (OrthogonalMatchingPursuitCV(), {}),
+    'RANSACRegressor': (RANSACRegressor(), {}),
+    'LassoLarsIC': (LassoLarsIC(), {'regressor__criterion': ['aic', 'bic']}),
+    'Lars': (Lars(), {'regressor__n_nonzero_coefs': [5, 10, 20]}),
+    'LassoLarsCV': (LassoLarsCV(), {'regressor__cv': [5]}),
+    'LinearSVR': (LinearSVR(), {'regressor__C': [0.1, 1, 10], 'regressor__epsilon': [0.1, 0.2]}),
+    'Ridge': (Ridge(), {'regressor__alpha': [0.1, 1, 10]})
+}
+
+scalers={'Standard Scaler' :StandardScaler(),
+         'Min Max Scaler':MinMaxScaler(),
+         'Roobust Scaler': RobustScaler(),
+         'No Scaler': None
+        }
+
+tscv = TimeSeriesSplit(n_splits=5)
+rmse_scorer = make_scorer(lambda y_true, y_pred: -mean_squared_error(y_true, y_pred, squared=False)) 
+```
 ### Regressors and Scalers
 
 1. **Regressors**:
