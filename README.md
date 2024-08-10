@@ -69,7 +69,38 @@ lazy_reg = LazyRegressor(verbose=0, ignore_warnings=True, custom_metric=mean_squ
 models, predictions = lazy_reg.fit(X_train_lazy, X_test_lazy, y_train_lazy, y_test_lazy)
 ```
 ## Top Model Selection
-The top models from LazyPredict were further evaluated using GridSearchCV with various scalers to find the best combination of model and scaler.
+After identifying the best-performing models using `LazyPredict`, we further fine-tuned these models by applying hyperparameter optimization using `GridSearchCV`. This process involved evaluating multiple combinations of regressors and data scaling methods to determine the best model for predicting stock prices.
+
+### Regressors and Scalers
+
+1. **Regressors**:
+   The `regressors` dictionary defines a set of machine learning models (regressors) and their respective hyperparameters for tuning. For each regressor, the dictionary contains:
+   - The model itself, such as `BayesianRidge` or `LinearRegression`.
+   - A corresponding dictionary of hyperparameters that `GridSearchCV` will search over to find the best parameters.
+
+   Example Regressors:
+   - **BayesianRidge**: A linear regression model with a Bayesian approach. The hyperparameter `n_iter` specifies the number of iterations.
+   - **LassoLarsIC**: A Lasso model with Least Angle Regression (LARS) that uses information criteria (AIC or BIC) to select the best model.
+   - **LinearSVR**: A linear Support Vector Regression model, with `C` and `epsilon` as hyperparameters controlling the regularization and margin of tolerance, respectively.
+
+2. **Scalers**:
+   The `scalers` dictionary defines different data scaling techniques that normalize or standardize the input features before training:
+   - **Standard Scaler**: Standardizes features by removing the mean and scaling to unit variance.
+   - **MinMax Scaler**: Scales each feature to a given range, typically between 0 and 1.
+   - **Robust Scaler**: Scales features using statistics that are robust to outliers.
+   - **No Scaler**: Indicates that no scaling is applied.
+
+### Cross-Validation with Time Series Split
+
+- **TimeSeriesSplit (tscv)**: A cross-validation technique specifically designed for time series data. It splits the data into training and testing sets while preserving the order of the data points, ensuring that future data points are never used in the training process.
+
+### RMSE Scorer
+
+- **RMSE Scorer**: Root Mean Squared Error (RMSE) is used as the scoring metric. The lower the RMSE, the better the model's predictions align with the actual values. In this code, `make_scorer` is used to create a custom scoring function that returns the negative RMSE. This is because `GridSearchCV` maximizes the scoring metric, so by using negative RMSE, we effectively minimize the RMSE.
+
+### Summary
+
+By combining different regressors, scalers, and utilizing `GridSearchCV` with time series cross-validation, this approach systematically searches for the best model configuration. This ensures that the selected model is not only accurate but also well-suited to the temporal nature of the stock price data.
 
 ### Example Code:
 ```python
