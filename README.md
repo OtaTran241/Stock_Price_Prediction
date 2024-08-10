@@ -5,7 +5,8 @@ This project focuses on predicting stock prices using various machine learning m
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Dataset](#dataset)
-- [Setup and Requirements](#setup-and-requirements)
+- [Setup](#setup-and-requirements)
+- [Custom Train Test Split](#custom-train-test-split)
 - [Modeling with LazyPredict](#modeling-with-lazypredict)
 - [Top Model Selection](#top-model-selection)
 - [Advanced Modeling with LSTM](#advanced-modeling-with-lstm)
@@ -31,7 +32,7 @@ The dataset used in this project consists of stock prices with the following col
 - **Volume**: Trading volume.
 - **Open Interest**: Number of outstanding contracts.
 
-## Setup and Requirements
+## Setup
 
 ### Installation
 1. Clone the repository:
@@ -39,6 +40,25 @@ The dataset used in this project consists of stock prices with the following col
     git clone https://github.com/OtaTran241/Stock_Price_Prediction.git
     cd Stock_Price_Prediction
     ```
+## Custom Train Test Split
+In this project, a custom `train_test_split` function was implemented instead of using the standard `train_test_split` from scikit-learn. This decision was made due to the time series nature of the data.
+
+### Why Not Use scikit-learn's `train_test_split`?
+The standard `train_test_split` function in scikit-learn randomly splits the dataset into training and testing sets. While this approach is generally effective for many machine learning tasks, it is not suitable for time series data where the temporal order of data points is crucial. Randomly splitting time series data can lead to data leakage, where future data points are included in the training set, leading to overly optimistic results.
+
+### Custom `train_test_split` Implementation
+The custom `train_test_split` function preserves the temporal order of the data by splitting it sequentially. This ensures that the model is trained on past data and tested on future data, which more closely resembles real-world scenarios.
+
+### Example Code:
+```python
+def train_test_split(X, Y, train_size=0.8):
+    x_train = X[:int(train_size*len(X))]
+    y_train = Y[:int(train_size*len(X))]
+    x_test = X[int(train_size*len(X)):]
+    y_test = Y[int(train_size*len(X))]
+    return x_train, x_test, y_train, y_test
+```
+This approach ensures that the model's performance evaluation is realistic and that it generalizes well to future data points.
 
 ## Modeling with LazyPredict
 Using `LazyPredict`, several regression models were tested on the dataset. The models were ranked based on their performance, particularly focusing on RMSE.
