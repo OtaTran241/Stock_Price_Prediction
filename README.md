@@ -32,6 +32,30 @@ The dataset used in this project consists of stock prices with the following col
 - **Volume**: Trading volume.
 - **Open Interest**: Number of outstanding contracts.
 
+### Why Create Additional `Close` Columns?
+
+1. **Lagged Features for Prediction**:
+   - **Problem**: Predicting future stock prices using only the current price might not be sufficient because stock prices are influenced by previous prices.
+   - **Solution**: By creating lagged features (`Close1`, `Close2`, `Close3`, `Close4`), you provide the model with previous closing prices as input features. These columns represent the closing prices from one, two, three, and four time steps before the current row.
+
+2. **Time Series Data Structure**:
+   - **Problem**: Stock price data is sequential, meaning that the value at any given time depends on previous values.
+   - **Solution**: By introducing lagged variables, you transform the dataset into a time series format where each row contains information from several past time steps. This allows the model to learn temporal dependencies, which is crucial for making accurate predictions.
+
+3. **Future Prediction Target**:
+   - **Problem**: To predict the stock price at a future time (e.g., 4 steps ahead), you need to define this future price as the target variable.
+   - **Solution**: The `Close4` column is used as the target variable (`Y`). It represents the closing price four time steps ahead. This setup allows the model to learn the relationship between past prices (in `Close`, `Close1`, `Close2`, `Close3`) and the future price (`Close4`).
+
+### Summary
+
+Creating additional `Close` columns by shifting the original `Close` column is a common technique in time series forecasting. It enables the model to:
+- Learn from past data points to make predictions about the future.
+- Capture temporal dependencies in the stock prices.
+- Predict a future price several steps ahead, which is the ultimate goal of the project.
+
+By doing this, you effectively prepare the data for a machine learning model that can forecast stock prices based on historical data, making your predictions more robust and accurate.
+
+
 ## Setup
 
 ### Installation
