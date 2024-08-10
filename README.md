@@ -13,7 +13,6 @@ This project focuses on predicting stock prices using various machine learning m
 - [Results](#results)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Project Overview
 This project aims to predict stock prices by:
@@ -33,16 +32,6 @@ The dataset used in this project consists of stock prices with the following col
 - **Open Interest**: Number of outstanding contracts.
 
 ## Setup and Requirements
-### Requirements
-- Python 3.7+
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-- TensorFlow/Keras
-- LazyPredict
-- Joblib
 
 ### Installation
 1. Clone the repository:
