@@ -59,25 +59,49 @@ In the provided code, the shift_columns function shifts each column by a specifi
     git clone https://github.com/OtaTran241/Stock_Price_Prediction.git
     cd Stock_Price_Prediction
     ```
-## Custom Train Test Split
-In this project, a custom `train_test_split` function was implemented instead of using the standard `train_test_split` from scikit-learn. This decision was made due to the time series nature of the data.
 
-### Why Not Use scikit-learn's `train_test_split`?
-The standard `train_test_split` function in scikit-learn randomly splits the dataset into training and testing sets. While this approach is generally effective for many machine learning tasks, it is not suitable for time series data where the temporal order of data points is crucial. Randomly splitting time series data can lead to data leakage, where future data points are included in the training set, leading to overly optimistic results.
+## Custom Train Test Split
+In this project, a custom train_test_split function was implemented instead of using the standard train_test_split from scikit-learn. This decision was made due to the time series nature of the data and the need for data cleaning.
+
+### Why Not Use scikit-learn's train_test_split?
+The standard train_test_split function in scikit-learn randomly splits the dataset into training and testing sets. While effective for many machine learning tasks, this approach is not suitable for time series data where the temporal order of data points is crucial. Randomly splitting time series data can lead to data leakage, where future data points are included in the training set, leading to overly optimistic results.
 
 ### Custom `train_test_split` Implementation
-The custom `train_test_split` function preserves the temporal order of the data by splitting it sequentially. This ensures that the model is trained on past data and tested on future data, which more closely resembles real-world scenarios.
+The custom `train_test_split` function preserves the temporal order of the data by splitting it sequentially. Additionally, it removes any rows with NaN values from both the features and the target variables. This ensures that the model is trained on past data and tested on future data, reflecting real-world scenarios and providing clean datasets for training and evaluation.
 
-### Example Code:
+Example Code:
 ```python
 def train_test_split(X, Y, train_size=0.8):
-    x_train = X[:int(train_size*len(X))]
-    y_train = Y[:int(train_size*len(X))]
-    x_test = X[int(train_size*len(X)):]
-    y_test = Y[int(train_size*len(X))]
-    return x_train, x_test, y_train, y_test
+    """
+    Splits the data into training and testing sets based on the train_size ratio and removes NaN values.
+
+    Parameters:
+    X (list or np.array or pd.DataFrame): Input data (features) to be split.
+    Y (list or np.array or pd.Series): Target data (labels) corresponding to the input data.
+    train_size (float): Proportion of the data used for training. Default is 0.8 (80%).
+
+    Returns:
+    x_train_clean (pd.DataFrame or np.array): Training input data with NaN values removed.
+    x_test_clean (pd.DataFrame or np.array): Testing input data with NaN values removed.
+    y_train_clean (pd.Series or np.array): Target labels for the training data with NaN values removed.
+    y_test_clean (pd.Series or np.array): Target labels for the testing data with NaN values removed.
+    """
+    x_train = X[:int(train_size * len(X))]
+    y_train = Y[:int(train_size * len(X))]
+    x_test = X[int(train_size * len(X)):]
+    y_test = Y[int(train_size * len(X)):]
+
+    train_df = pd.concat([pd.DataFrame(x_train), pd.Series(y_train)], axis=1).dropna()
+    x_train_clean = train_df.iloc[:, :-1]
+    y_train_clean = train_df.iloc[:, -1]
+    
+    test_df = pd.concat([pd.DataFrame(x_test), pd.Series(y_test)], axis=1).dropna()
+    x_test_clean = test_df.iloc[:, :-1]
+    y_test_clean = test_df.iloc[:, -1]
+    
+    return x_train_clean, x_test_clean, y_train_clean, y_test_clean
 ```
-This approach ensures that the model's performance evaluation is realistic and that it generalizes well to future data points.
+This custom implementation ensures that the model's performance evaluation is realistic and that it generalizes well to future data points, while also providing clean datasets free of NaN values.
 
 ## Modeling with LazyPredict
 Using `LazyPredict`, several regression models were tested on the dataset. The models were ranked based on their performance, particularly focusing on RMSE.
