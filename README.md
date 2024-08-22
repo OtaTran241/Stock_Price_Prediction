@@ -35,6 +35,35 @@ The dataset used in this project consists of stock prices with the following col
 ### Why Shift Columns?
 In time series forecasting, shifting columns is a common technique used to create features that capture historical patterns and relationships in the data. Here's why this method is valuable:
 
+```python
+def shift_columns(df, target_column, n_shifts):
+    """
+    Tạo ra tập dữ liệu dự đoán giá (Close) từ dữ liệu từ n (n_shifts) phút trước.
+  
+    Parameters:
+    df (pd.DataFrame): DataFrame chứa các cột gốc.
+    target_column (str): Cột mục tiêu để tạo các cột dịch chuyển thêm một bước so với các cột khác.
+    n_shifts (int): Số lượng bước dịch chuyển cho các cột mới.
+  
+    Returns:
+    pd.DataFrame: DataFrame đã được mở rộng với các cột dịch chuyển.
+    """
+    df_shifted = df.copy()
+  
+    columns = df_shifted.columns.tolist()
+    for column in columns:
+      if column == target_column:
+        for i in range(1, n_shifts + 2):
+            df_shifted[f'{column}{i}'] = df_shifted[column].shift(-i)
+      else:
+        for i in range(1, n_shifts + 1):
+            df_shifted[f'{column}{i}'] = df_shifted[column].shift(-i)
+  
+    df_shifted = df_shifted.dropna(subset=[f'{columns[0]}{n_shifts}'])
+  
+    return df_shifted
+```
+
 1. Lag Features Creation
 Shifting columns generates lag features, which represent past values of a variable at different time steps. These lag features help the model learn temporal dependencies and patterns in the data. For instance, if you are forecasting stock prices, past prices (lags) can be indicative of future price movements.
 
