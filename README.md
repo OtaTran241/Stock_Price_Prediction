@@ -50,15 +50,6 @@ Time series data often exhibit non-stationarity, where statistical properties li
 Example
 In the provided code, the shift_columns function shifts each column by a specified number of steps (e.g., 1, 2, 3, etc.) and creates new features for each step. This helps in forming a dataset where past values of 'Close', 'Open', 'High', and 'Low' are used to predict future values of 'Close', capturing the dynamics of the time series.
 
-### Summary
-
-Creating additional `Close` columns by shifting the original `Close` column is a common technique in time series forecasting. It enables the model to:
-- Learn from past data points to make predictions about the future.
-- Capture temporal dependencies in the stock prices.
-- Predict a future price several steps ahead, which is the ultimate goal of the project.
-
-By doing this, you effectively prepare the data for a machine learning model that can forecast stock prices based on historical data, making your predictions more robust and accurate.
-
 
 ## Setup
 
