@@ -204,7 +204,7 @@ best_pipeline = Pipeline([
     ('scaler', best_scaler_),
     ('classifier', best_model.set_params(**best_params_cleaned))
 ])
-best_pipeline.fit(X_train, y_train)
+best_pipeline.fit(X_train_ml, y_train_ml)
 ```
 ## Advanced Modeling with LSTM
 An LSTM model was implemented for time series prediction. The LSTM model was trained and evaluated on the stock price data.
@@ -216,11 +216,15 @@ Dense Layer: Final dense layer for prediction.
 ### Example Code:
 ```python
 lstm_model = Sequential()
-lstm_model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], 1)))
-lstm_model.add(LSTM(units=50))
-lstm_model.add(Dense(1))
-lstm_model.compile(loss='mean_squared_error', optimizer='adam')
-lstm_model.fit(X_train, y_train, epochs=16, batch_size=128, verbose=2)
+
+lstm_model.add(LSTM(units=50, activation='relu', input_shape=(X_train_lstm.shape[1], X_train_lstm.shape[2])))
+
+lstm_model.add(Dense(units=1))
+
+optimizer = Adam(learning_rate=0.001)
+lstm_model.compile(optimizer=optimizer, loss='mean_squared_error')
+
+lstm_model.fit(X_train_lstm, y_train_lstm, epochs=10, batch_size=512, validation_data=(X_test_lstm, y_test_lstm))
 ```
 ## Evaluation Metrics
 MAE (Mean Absolute Error)
@@ -229,15 +233,23 @@ RMSE (Root Mean Squared Error)
 R² Score
 ### Example Metrics:
 ```python
-test_mae = mean_absolute_error(y_test, y_pred)
-test_mse = mean_squared_error(y_test, y_pred)
+test_mae = mean_absolute_error(y_test_lstm, y_pred_lstm)
+test_mse = mean_squared_error(y_test_lstm, y_pred_lstm)
 test_rmse = np.sqrt(test_mse)
-test_r2 = r2_score(y_test, y_pred)
+test_r2 = r2_score(y_test_lstm, y_pred_lstm)
 ```
 ## Results
-The best model selected was OrthogonalMatchingPursuitCV with a Standard Scaler. The model achieved nearly perfect accuracy with an RMSE close to zero.
-
-The LSTM model also performed well, achieving high accuracy in predicting stock prices.
+### Results from Machine Learning Models
+- Linear Machine Learning models such as LassoLarsIC, Ridge, and OrthogonalMatchingPursuit achieved very high performance with an R² close to absolute (0.99), very low RMSE (0.04), and very small MAE (0.0436).
+- LassoLarsIC was selected as the best model with the lowest RMSE (0.0611) without the need for a scaler.
+### Results from LSTM Model
+- The LSTM model achieved an R² of 0.9989, which is also very high, indicating good prediction capability.
+- However, the RMSE of LSTM (0.0956) is slightly higher than that of the best linear models, suggesting that LSTM is not significantly superior to linear models for this problem.
+- The MAE of LSTM is 0.0660, which is also larger compared to the results from the linear models.
+### Conclusion
+- Simple linear models perform well in this problem with superior performance and faster training times.
+- LSTM, while capable of good predictions, is not necessary if the data has a linear structure.
+- For similar cases, it might be preferable to use linear models like LassoLarsIC to achieve good results with lower computational cost.
 
 ## Usage
 ### Predicting Stock Prices
