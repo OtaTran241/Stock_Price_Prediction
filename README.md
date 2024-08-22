@@ -143,41 +143,41 @@ models, predictions = lazy_reg.fit(X_train_lazy, X_test_lazy, y_train_lazy, y_te
 ## Top Model Selection
 After identifying the best-performing models using `LazyPredict`, we further fine-tuned these models by applying hyperparameter optimization using `GridSearchCV`. This process involved evaluating multiple combinations of regressors and data scaling methods to determine the best model for predicting stock prices.
 
-### Example Code:
+Example Code:
 ```python
 regressors = {
-    'BayesianRidge': (BayesianRidge(), {'regressor__n_iter': [300, 500, 1000]}),
-    'TransformedTargetRegressor': (TransformedTargetRegressor(regressor=LinearRegression()), {}),
+    'Ridge': (Ridge(), {'regressor__alpha': [0.1, 1.0, 10.0]}),
+    'OrthogonalMatchingPursuit': (OrthogonalMatchingPursuit(), {}),
     'LinearRegression': (LinearRegression(), {}),
-    'OrthogonalMatchingPursuitCV': (OrthogonalMatchingPursuitCV(), {}),
-    'RANSACRegressor': (RANSACRegressor(), {}),
-    'LassoLarsIC': (LassoLarsIC(), {'regressor__criterion': ['aic', 'bic']}),
+    'TransformedTargetRegressor': (TransformedTargetRegressor(regressor=LinearRegression()), {}),
+    'GammaRegressor': (GammaRegressor(), {'regressor__alpha': [0.1, 1.0, 10.0]}),
     'Lars': (Lars(), {'regressor__n_nonzero_coefs': [5, 10, 20]}),
-    'LassoLarsCV': (LassoLarsCV(), {'regressor__cv': [5]}),
-    'LinearSVR': (LinearSVR(), {'regressor__C': [0.1, 1, 10], 'regressor__epsilon': [0.1, 0.2]}),
-    'Ridge': (Ridge(), {'regressor__alpha': [0.1, 1, 10]})
+    'BayesianRidge': (BayesianRidge(), {'regressor__n_iter': [300, 500, 1000]}),
+    'RidgeCV': (RidgeCV(), {'regressor__alphas': [0.1, 1.0, 10.0]}),
+    'LassoLarsIC': (LassoLarsIC(), {'regressor__criterion': ['aic', 'bic']}),
+    'TweedieRegressor': (TweedieRegressor(), {'regressor__power': [0, 1, 1.5, 2]})
 }
 
-scalers={'Standard Scaler' :StandardScaler(),
-         'Min Max Scaler':MinMaxScaler(),
-         'Roobust Scaler': RobustScaler(),
-         'No Scaler': None
-        }
+scalers = {
+    'Standard Scaler': StandardScaler(),
+    'Min Max Scaler': MinMaxScaler(),
+    'Robust Scaler': RobustScaler(),
+    'No Scaler': None
+}
 
 tscv = TimeSeriesSplit(n_splits=5)
-rmse_scorer = make_scorer(lambda y_true, y_pred: -mean_squared_error(y_true, y_pred, squared=False)) 
+rmse_scorer = make_scorer(lambda y_true, y_pred: -mean_squared_error(y_true, y_pred, squared=False))  # RMSE scorer
 ```
-### Regressors and Scalers
+1. Regressors:
+The regressors dictionary defines a set of machine learning models (regressors) and their respective hyperparameters for tuning. For each regressor, the dictionary contains:
 
-1. **Regressors**:
-   The `regressors` dictionary defines a set of machine learning models (regressors) and their respective hyperparameters for tuning. For each regressor, the dictionary contains:
-   - The model itself, such as `BayesianRidge` or `LinearRegression`.
-   - A corresponding dictionary of hyperparameters that `GridSearchCV` will search over to find the best parameters.
+- The model itself, such as Ridge or GammaRegressor.
+- A corresponding dictionary of hyperparameters that GridSearchCV will search over to find the best parameters.
 
-   Example Regressors:
-   - **BayesianRidge**: A linear regression model with a Bayesian approach. The hyperparameter `n_iter` specifies the number of iterations.
-   - **LassoLarsIC**: A Lasso model with Least Angle Regression (LARS) that uses information criteria (AIC or BIC) to select the best model.
-   - **LinearSVR**: A linear Support Vector Regression model, with `C` and `epsilon` as hyperparameters controlling the regularization and margin of tolerance, respectively.
+Example Regressors:
+- Ridge: A linear regression model with L2 regularization. The hyperparameter alpha controls the strength of the regularization.
+- GammaRegressor: A generalized linear model that assumes a gamma distribution for the target variable. The hyperparameter alpha controls the regularization strength.
+- TweedieRegressor: A flexible regression model that can handle various distributions of the target variable. The power parameter specifies the distribution family (e.g., Gaussian, Poisson, Gamma).
 
 2. **Scalers**:
    The `scalers` dictionary defines different data scaling techniques that normalize or standardize the input features before training:
