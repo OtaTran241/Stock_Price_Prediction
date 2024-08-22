@@ -31,20 +31,24 @@ The dataset used in this project consists of stock prices with the following col
 - **Close**: Closing price.
 - **Volume**: Trading volume.
 - **Open Interest**: Number of outstanding contracts.
+  
+### Why Shift Columns?
+In time series forecasting, shifting columns is a common technique used to create features that capture historical patterns and relationships in the data. Here's why this method is valuable:
 
-### Why Create Additional `Close` Columns?
+1. Lag Features Creation
+Shifting columns generates lag features, which represent past values of a variable at different time steps. These lag features help the model learn temporal dependencies and patterns in the data. For instance, if you are forecasting stock prices, past prices (lags) can be indicative of future price movements.
 
-1. **Lagged Features for Prediction**:
-   - **Problem**: Predicting future stock prices using only the current price might not be sufficient because stock prices are influenced by previous prices.
-   - **Solution**: By creating lagged features (`Close1`, `Close2`, `Close3`, `Close4`), you provide the model with previous closing prices as input features. These columns represent the closing prices from one, two, three, and four time steps before the current row.
+2. Enhanced Model Inputs
+By including historical values of the target variable (e.g., the closing price of a stock) and other features (e.g., open, high, low prices), you provide the model with more context and information. This can improve the model's ability to capture trends and seasonality in the data.
 
-2. **Time Series Data Structure**:
-   - **Problem**: Stock price data is sequential, meaning that the value at any given time depends on previous values.
-   - **Solution**: By introducing lagged variables, you transform the dataset into a time series format where each row contains information from several past time steps. This allows the model to learn temporal dependencies, which is crucial for making accurate predictions.
+3. Predictive Power
+Shifting columns allows the creation of features that can predict future values based on past observations. For example, if the model is trained with features such as 'Close-1', 'Close-2', and 'Close-3', it can use these to predict 'Close', improving forecasting accuracy.
 
-3. **Future Prediction Target**:
-   - **Problem**: To predict the stock price at a future time (e.g., 4 steps ahead), you need to define this future price as the target variable.
-   - **Solution**: The `Close4` column is used as the target variable (`Y`). It represents the closing price four time steps ahead. This setup allows the model to learn the relationship between past prices (in `Close`, `Close1`, `Close2`, `Close3`) and the future price (`Close4`).
+4. Handling Non-Stationarity
+Time series data often exhibit non-stationarity, where statistical properties like mean and variance change over time. By creating lag features, you help the model understand and adapt to these changes, making it more robust in predicting future values.
+
+Example
+In the provided code, the shift_columns function shifts each column by a specified number of steps (e.g., 1, 2, 3, etc.) and creates new features for each step. This helps in forming a dataset where past values of 'Close', 'Open', 'High', and 'Low' are used to predict future values of 'Close', capturing the dynamics of the time series.
 
 ### Summary
 
