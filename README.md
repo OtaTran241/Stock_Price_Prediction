@@ -210,9 +210,9 @@ best_pipeline.fit(X_train_ml, y_train_ml)
 An LSTM model was implemented for time series prediction. The LSTM model was trained and evaluated on the stock price data.
 
 ### LSTM Architecture:
-Input Layer: Sequence of stock prices.
-LSTM Layers: Two LSTM layers with 50 units each.
-Dense Layer: Final dense layer for prediction.
+Input Layer: Sequence of stock prices.  
+LSTM Layers: LSTM layers with 50 units.    
+Dense Layer: Final dense layer for prediction.  
 ### Example Code:
 ```python
 lstm_model = Sequential()
