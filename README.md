@@ -37,17 +37,6 @@ In time series forecasting, shifting columns is a common technique used to creat
 
 ```python
 def shift_columns(df, target_column, n_shifts):
-    """
-    Tạo ra tập dữ liệu dự đoán giá (Close) từ dữ liệu từ n (n_shifts) phút trước.
-  
-    Parameters:
-    df (pd.DataFrame): DataFrame chứa các cột gốc.
-    target_column (str): Cột mục tiêu để tạo các cột dịch chuyển thêm một bước so với các cột khác.
-    n_shifts (int): Số lượng bước dịch chuyển cho các cột mới.
-  
-    Returns:
-    pd.DataFrame: DataFrame đã được mở rộng với các cột dịch chuyển.
-    """
     df_shifted = df.copy()
   
     columns = df_shifted.columns.tolist()
@@ -101,34 +90,20 @@ The custom `train_test_split` function preserves the temporal order of the data 
 Example Code:
 ```python
 def train_test_split(X, Y, train_size=0.8):
-    """
-    Splits the data into training and testing sets based on the train_size ratio and removes NaN values.
+  x_train = X[:int(train_size*len(X))]
+  y_train = Y[:int(train_size*len(X))]
+  x_test = X[int(train_size*len(X)):]
+  y_test = Y[int(train_size*len(X)):]
 
-    Parameters:
-    X (list or np.array or pd.DataFrame): Input data (features) to be split.
-    Y (list or np.array or pd.Series): Target data (labels) corresponding to the input data.
-    train_size (float): Proportion of the data used for training. Default is 0.8 (80%).
+  train_df = pd.concat([pd.DataFrame(x_train), pd.Series(y_train)], axis=1).dropna()
+  x_train_clean = train_df.iloc[:, :-1]
+  y_train_clean = train_df.iloc[:, -1]
 
-    Returns:
-    x_train_clean (pd.DataFrame or np.array): Training input data with NaN values removed.
-    x_test_clean (pd.DataFrame or np.array): Testing input data with NaN values removed.
-    y_train_clean (pd.Series or np.array): Target labels for the training data with NaN values removed.
-    y_test_clean (pd.Series or np.array): Target labels for the testing data with NaN values removed.
-    """
-    x_train = X[:int(train_size * len(X))]
-    y_train = Y[:int(train_size * len(X))]
-    x_test = X[int(train_size * len(X)):]
-    y_test = Y[int(train_size * len(X)):]
+  test_df = pd.concat([pd.DataFrame(x_test), pd.Series(y_test)], axis=1).dropna()
+  x_test_clean = test_df.iloc[:, :-1]
+  y_test_clean = test_df.iloc[:, -1]
 
-    train_df = pd.concat([pd.DataFrame(x_train), pd.Series(y_train)], axis=1).dropna()
-    x_train_clean = train_df.iloc[:, :-1]
-    y_train_clean = train_df.iloc[:, -1]
-    
-    test_df = pd.concat([pd.DataFrame(x_test), pd.Series(y_test)], axis=1).dropna()
-    x_test_clean = test_df.iloc[:, :-1]
-    y_test_clean = test_df.iloc[:, -1]
-    
-    return x_train_clean, x_test_clean, y_train_clean, y_test_clean
+  return x_train_clean, x_test_clean, y_train_clean, y_test_clean
 ```
 This custom implementation ensures that the model's performance evaluation is realistic and that it generalizes well to future data points, while also providing clean datasets free of NaN values.
 
